@@ -1,6 +1,7 @@
 export default function ProjetosPage() {
   const items = [
     { title: 'Relatorium (Desktop – Windows)', stack: 'Flutter • Drift • AES‑GCM', link: '/projetos/relatorium' },
+    { title: 'Bot de Discord para RPG (Python)', stack: 'Python • discord.py • PostgreSQL', link: '/projetos/bot-discord-rpg' },
     { title: 'Landing institucional', stack: 'Next.js • Tailwind', link: '#' },
     { title: 'Dashboard analítico', stack: 'Next.js • Charts', link: '#' },
   ]
