@@ -2,6 +2,8 @@ import './globals.css'
 import { Metadata } from 'next'
 import Header from '@/components/Header'
 import { Inter } from 'next/font/google'
+import { useEffect } from 'react'
+import Script from 'next/script'
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' })
 
@@ -19,6 +21,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="content" className="container mx-auto max-w-3xl px-6">
           {children}
         </main>
+        <Script id="motion-killswitch" strategy="afterInteractive">
+          {`(function(){try{var p=new URLSearchParams(window.location.search);if(p.get('motion')==='off'){document.documentElement.setAttribute('data-motion','off')}}catch(e){}})();`}
+        </Script>
       </body>
     </html>
   )
