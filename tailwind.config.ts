@@ -63,11 +63,17 @@ export default {
           '0%': { backgroundPosition: '-200% 0' },
           '100%': { backgroundPosition: '200% 0' },
         },
+        orb: {
+          '0%': { transform: 'translate(0, 0)' },
+          '50%': { transform: 'translate(8px, -6px)' },
+          '100%': { transform: 'translate(0, 0)' },
+        },
       },
       animation: {
         'fade-in': 'fade-in 200ms ease-out',
         'slide-up': 'slide-up 250ms ease-out',
         shimmer: 'shimmer 1.25s linear infinite',
+        orb: 'orb 5s ease-in-out infinite',
       },
       transitionTimingFunction: {
         soft: 'cubic-bezier(0.22, 1, 0.36, 1)',

@@ -1,20 +1,20 @@
-import { ImageWithFallback } from '@/components/ui/ImageWithFallback'
-import { Button } from '@/components/ui/Button'
+import { Button, buttonVariants } from '@/components/ui/Button'
+import Link from 'next/link'
+import { Hero } from '@/components/Hero'
 
 export default function Page() {
   return (
-    <main className="mx-auto max-w-3xl px-6 py-16">
+    <div className="py-16 animate-fade-in">
       <h1 className="text-3xl font-semibold">Portfólio Técnico</h1>
-      <p className="mt-4 text-sm text-neutral-300">
-        Next.js 14 • App Router • Tailwind • MDX
-      </p>
+      <p className="mt-4 text-sm text-neutral-300">Next.js 14 • App Router • Tailwind • MDX</p>
       <div className="mt-8 rounded-lg border border-neutral-800 bg-neutral-900 p-6">
-        <ImageWithFallback src="/images/hero.svg" alt="Hero" width={1200} height={600} className="h-48 w-full rounded-lg object-cover" />
+        <Hero />
         <p className="mt-4">Home mínima para validar deploy.</p>
-        <div className="mt-4">
-          <Button>Chamada para ação</Button>
+        <div className="mt-4 flex gap-3">
+          <Link href="/projetos" className={buttonVariants({ variant: 'primary' })} aria-label="Ver projetos">Ver projetos</Link>
+          <Link href="/contato" className={buttonVariants({ variant: 'secondary' })} aria-label="Entrar em contato">Entrar em contato</Link>
         </div>
       </div>
-    </main>
+    </div>
   )
 }
