@@ -2,66 +2,86 @@
 import { useEffect, useRef, useState } from 'react'
 import { clsx } from 'clsx'
 
-function tier() {
-  const hc = typeof navigator !== 'undefined' ? navigator.hardwareConcurrency ?? 4 : 4
-  const dm = typeof (navigator as any) !== 'undefined' ? (navigator as any).deviceMemory ?? 4 : 4
-  const vw = typeof window !== 'undefined' ? window.innerWidth : 1024
-  if (hc <= 2 || dm <= 2) return 'low'
-  if (vw < 768) return 'mobile'
-  return 'desktop'
+interface MotionParams {
+  raioDeteccao?: number
+  velocidadeMovimento?: number
+  fatorSuavizacao?: number // 0.1 a 0.9
+  limiteTelaX?: number
+  limiteTelaY?: number
 }
 
-function Hero() {
+function Hero({
+  raioDeteccao = 120,
+  velocidadeMovimento = 4,
+  fatorSuavizacao = 0.15,
+  limiteTelaX,
+  limiteTelaY,
+}: MotionParams) {
   const ref = useRef<HTMLDivElement | null>(null)
   const [enabled, setEnabled] = useState(true)
+
   useEffect(() => {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const html = document.documentElement
     const motionOff = html.getAttribute('data-motion') === 'off'
-    const t = tier()
-    if (prefersReduced || motionOff || t === 'low') { setEnabled(false); return }
+    if (prefersReduced || motionOff) { setEnabled(false); return }
     const el = ref.current
     if (!el) return
-    let raf = 0
+    const containerRect = el.getBoundingClientRect()
+    const maxX = (limiteTelaX ?? containerRect.width)
+    const maxY = (limiteTelaY ?? containerRect.height)
     const orbs = Array.from(el.querySelectorAll('[data-orb="true"]')) as HTMLElement[]
-    const state = orbs.map(() => ({ x: 0, y: 0 }))
-    const max = t === 'mobile' ? 8 : 12
+    const offsets = orbs.map(() => ({ x: 0, y: 0 }))
+
     const onMove = (e: PointerEvent) => {
       orbs.forEach((o, i) => {
-        o.style.willChange = 'transform'
         const rect = o.getBoundingClientRect()
         const cx = rect.left + rect.width / 2
         const cy = rect.top + rect.height / 2
-        const dx = (e.clientX - cx) * 0.02
-        const dy = (e.clientY - cy) * 0.02
-        state[i].x += (Math.max(-max, Math.min(max, dx)) - state[i].x) * 0.08
-        state[i].y += (Math.max(-max, Math.min(max, dy)) - state[i].y) * 0.08
-        o.style.transform = `translate3d(${state[i].x}px, ${state[i].y}px, 0)`
-        window.setTimeout(() => { o.style.willChange = '' }, 400)
+        const dx = e.clientX - cx
+        const dy = e.clientY - cy
+        const dist = Math.hypot(dx, dy)
+        if (dist <= raioDeteccao) {
+          o.style.willChange = 'transform'
+          const signX = dx > 0 ? -1 : 1
+          const signY = dy > 0 ? -1 : 1
+          const stepAxis = velocidadeMovimento / Math.SQRT2
+          const stepX = signX * stepAxis
+          const stepY = signY * stepAxis
+          const targetX = offsets[i].x + stepX
+          const targetY = offsets[i].y + stepY
+          const nextX = offsets[i].x + (targetX - offsets[i].x) * fatorSuavizacao
+          const nextY = offsets[i].y + (targetY - offsets[i].y) * fatorSuavizacao
+          const orbRadius = rect.width / 2
+          const newCenterX = cx + (nextX - offsets[i].x)
+          const newCenterY = cy + (nextY - offsets[i].y)
+          const minX = containerRect.left + orbRadius
+          const maxXAbs = containerRect.left + maxX - orbRadius
+          const minY = containerRect.top + orbRadius
+          const maxYAbs = containerRect.top + maxY - orbRadius
+          const clampedX = Math.max(minX, Math.min(maxXAbs, newCenterX))
+          const clampedY = Math.max(minY, Math.min(maxYAbs, newCenterY))
+          const deltaX = clampedX - cx
+          const deltaY = clampedY - cy
+          offsets[i].x += deltaX
+          offsets[i].y += deltaY
+          o.style.transform = `translate3d(${offsets[i].x}px, ${offsets[i].y}px, 0)`
+          window.setTimeout(() => { o.style.willChange = '' }, 300)
+        }
       })
     }
     el.addEventListener('pointermove', onMove, { passive: true })
-    const io = new IntersectionObserver((entries) => {
-      const visible = entries.some((e) => e.isIntersecting)
-      if (!visible) {
-        cancelAnimationFrame(raf)
-        orbs.forEach((o) => { o.style.transform = 'translate3d(0,0,0)' })
-      }
-    })
-    io.observe(el)
     return () => {
       el.removeEventListener('pointermove', onMove)
-      cancelAnimationFrame(raf)
-      io.disconnect()
     }
-  }, [])
+  }, [raioDeteccao, velocidadeMovimento, fatorSuavizacao, limiteTelaX, limiteTelaY])
 
   return (
     <div ref={ref} className="relative h-48 w-full overflow-hidden rounded-xl border border-border bg-neutral-900">
       <div className="absolute inset-4 rounded-xl bg-[radial-gradient(ellipse_at_center,_#0f172a,_transparent_60%)]" />
-      <span data-orb="true" className={clsx('absolute right-10 top-6 h-2 w-2 rounded-full bg-sky-400 animate-orb', enabled ? 'animate-rotate-slow animate-in-500' : '')} />
-      <span data-orb="true" className={clsx('absolute left-16 bottom-10 h-2 w-2 rounded-full bg-emerald-400 animate-orb', enabled ? 'animate-rotate-slow animate-in-500' : '')} />
-      <span data-orb="true" className={clsx('absolute left-1/2 top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-400 animate-orb', enabled ? 'animate-rotate-slow animate-in-500' : '')} />
+      <span data-orb="true" className={clsx('absolute right-10 top-6 h-2 w-2 rounded-full bg-sky-400 animate-in-500')} />
+      <span data-orb="true" className={clsx('absolute left-16 bottom-10 h-2 w-2 rounded-full bg-emerald-400 animate-in-500')} />
+      <span data-orb="true" className={clsx('absolute left-1/2 top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-400 animate-in-500')} />
     </div>
   )
 }
