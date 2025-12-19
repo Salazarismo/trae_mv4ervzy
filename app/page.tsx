@@ -1,3 +1,6 @@
+import { ImageWithFallback } from '@/components/ui/ImageWithFallback'
+import { Button } from '@/components/ui/Button'
+
 export default function Page() {
   return (
     <main className="mx-auto max-w-3xl px-6 py-16">
@@ -6,7 +9,11 @@ export default function Page() {
         Next.js 14 • App Router • Tailwind • MDX
       </p>
       <div className="mt-8 rounded-lg border border-neutral-800 bg-neutral-900 p-6">
-        <p>Home mínima para validar deploy.</p>
+        <ImageWithFallback src="/images/hero.svg" alt="Hero" width={1200} height={600} className="h-48 w-full rounded-lg object-cover" />
+        <p className="mt-4">Home mínima para validar deploy.</p>
+        <div className="mt-4">
+          <Button>Chamada para ação</Button>
+        </div>
       </div>
     </main>
   )

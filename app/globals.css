@@ -3,3 +3,26 @@
 @tailwind utilities;
 
 :focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; }
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: theme('colors.background.DEFAULT');
+    color: theme('colors.background.foreground');
+  }
+  h1 { @apply text-3xl font-semibold tracking-tight; }
+  h2 { @apply text-2xl font-semibold tracking-tight; }
+  h3 { @apply text-xl font-semibold; }
+  h4 { @apply text-lg font-medium; }
+  p { @apply leading-relaxed; }
+  a { @apply underline-offset-4 hover:underline; }
+  :root { color-scheme: dark; }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+}
+
+.skip-to-content {
+  @apply sr-only focus:not-sr-only fixed left-4 top-4 z-50 rounded-lg px-3 py-2 text-sm text-white shadow;
+  background-color: theme('colors.sky.500');
+}
