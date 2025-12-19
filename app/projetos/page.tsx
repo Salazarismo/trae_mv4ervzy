@@ -1,8 +1,8 @@
 export default function ProjetosPage() {
   const items = [
+    { title: 'Relatorium (Desktop – Windows)', stack: 'Flutter • Drift • AES‑GCM', link: '/projetos/relatorium' },
     { title: 'Landing institucional', stack: 'Next.js • Tailwind', link: '#' },
     { title: 'Dashboard analítico', stack: 'Next.js • Charts', link: '#' },
-    { title: 'API de contatos', stack: 'Server Actions', link: '#' },
   ]
   return (
     <main className="mx-auto max-w-3xl px-6 py-12">
