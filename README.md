@@ -25,6 +25,12 @@
   - Documento: `docs/styleguide.md` (do/don’t, variantes permitidas, decisões)
 - Acessibilidade: foco visível, `skip link`, `prefers-reduced-motion`; `aria-current` na navegação.
 
+### Motion
+
+- Utilitários de entrada/saída: `animate-in-300/500`, `animate-out-200/300`.
+- Orbs: float contínuo, rotação lenta e interação com cursor; tiers de performance (desktop 60fps, mobile 30fps, low-end sem JS).
+- Kill‑switch: adicione `?motion=off` na URL para desativar animações internamente.
+
 ### Desenvolvimento
 
 - `npm run dev` para ambiente local.

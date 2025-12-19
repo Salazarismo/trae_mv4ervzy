@@ -3,7 +3,7 @@ import { forwardRef } from 'react'
 import { clsx } from 'clsx'
 
 const buttonVariants = cva(
-  'inline-flex select-none items-center justify-center rounded-lg transition ease-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-60 disabled:cursor-not-allowed',
+  'inline-flex select-none items-center justify-center rounded-lg transition ease-soft animate-in-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-60 disabled:cursor-not-allowed',
   {
     variants: {
       variant: {
