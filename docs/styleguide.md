@@ -31,3 +31,12 @@
 
 ## Solicitações de Mudança
 - Propor alterações via PR com atualização deste contrato.
+
+## Motion
+- Utilitários: `animate-in-300/500`, `animate-out-200/300`, `animate-float`, `animate-rotate-slow`.
+- Limites: amplitude dos orbs 8–12px (máx. 15px); rotação ~0.75 rpm; deslocamentos por cursor ≤ 50% do diâmetro/segundo.
+- Tiers: desktop 60fps; mobile 30fps; low‑end sem JS nos orbs.
+- Kill‑switch: `data-motion="off"` no `<html>` ou `?motion=off` na URL.
+- Quando NÃO animar: formulários em envio, leitura longa, estados de erro e feedback crítico.
+ - Presença: usar `useExitAnimation(duration)` para saída com atraso de unmount quando necessário; preferir `data-state` para transições sem desmontar.
+ - Budget: no máximo 12 elementos animados simultaneamente; ≤ 2 transforms por elemento; entradas ≤ 500ms e saídas ≤ 300ms.
