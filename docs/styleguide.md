@@ -38,3 +38,5 @@
 - Tiers: desktop 60fps; mobile 30fps; low‑end sem JS nos orbs.
 - Kill‑switch: `data-motion="off"` no `<html>` ou `?motion=off` na URL.
 - Quando NÃO animar: formulários em envio, leitura longa, estados de erro e feedback crítico.
+ - Presença: usar `useExitAnimation(duration)` para saída com atraso de unmount quando necessário; preferir `data-state` para transições sem desmontar.
+ - Budget: no máximo 12 elementos animados simultaneamente; ≤ 2 transforms por elemento; entradas ≤ 500ms e saídas ≤ 300ms.
